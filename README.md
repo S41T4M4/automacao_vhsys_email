@@ -1,24 +1,16 @@
 Automação de Envio de E-mails no VHSYS
+Este projeto automatiza o envio de e-mails na tela de "Contas a Receber" do VHSYS. Ele navega pela tabela, identifica os pedidos pendentes de envio de e-mail e dispara os e-mails automaticamente usando Python + Selenium.
 
-Este projeto automatiza o envio de e-mails na tela de "Contas a receber" do VHSYS.
 
-1-
+1️⃣ Instale as Dependências
 
-Instale as dependências
-pip install selenium 
+pip install selenium
+2️⃣ Configure o WebDriver
+Baixe o chromedriver correspondente à sua versão do Google Chrome e coloque-o no caminho do sistema.
 
-2-
+3️⃣ Edite as Credenciais
+Se o login no VHSYS for necessário, ajuste o script para incluir o login automaticamente.
 
-Configure o webdriver
-baixe o chromedriver que corresponde a sua versão do Chrome.
+4️⃣ Execute o Script
 
-3-
-
-Edite as credenciais 
-Coloque suas credenciais de login
-
-4-
-
-Execute o Script 
 python automacao_email.py
-
