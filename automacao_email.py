@@ -33,7 +33,7 @@ def iniciar_automacao():
 
         driver.get(url)
 
-        wait = WebDriverWait(driver, 16)
+        wait = WebDriverWait(driver, 26)
 
         user = driver.find_element(By.ID, "login")
         senha_input = driver.find_element(By.ID, "senha")
