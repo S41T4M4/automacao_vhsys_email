@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import messagebox
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -20,17 +19,17 @@ def iniciar_automacao():
     data_final_emissao_value = data_final_emissao_entry.get()
 
     if not email or not senha or not data_inicial_emissao_value:
-        messagebox.showwarning("Campos vazios", "Por favor, insira e-mail, senha e a data que deseja filtrar")
+        status_label.config(text="Erro: Campos vazios!", fg="red")
         return
 
     try:
-        messagebox.showinfo("Automação", "Iniciando a automação...")
+        status_label.config(text="Iniciando a automação...", fg="blue")
+        root.update()
 
         options = webdriver.ChromeOptions()
         options.add_argument("--start-maximized")
-        
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         driver.get(url)
 
         wait = WebDriverWait(driver, 26)
@@ -42,7 +41,6 @@ def iniciar_automacao():
         senha_input.send_keys(senha)
         entrar.click()
 
-        
         def scroll_to_bottom():
             last_height = driver.execute_script("return document.body.scrollHeight")
             while True:
@@ -76,13 +74,10 @@ def iniciar_automacao():
         select.select_by_value("0")
         time.sleep(2)
 
-
         data_inicial_emissao = driver.find_element(By.ID, "data_emissao_rec_inicio")
         data_inicial_emissao.click()
         time.sleep(2)
         data_inicial_emissao.clear()
-        data_inicial_emissao.click()
-        time.sleep(2)
         data_inicial_emissao.send_keys(data_inicial_emissao_value)
         data_inicial_emissao.send_keys(Keys.ENTER)
 
@@ -91,16 +86,10 @@ def iniciar_automacao():
         data_final_emissao.click()
         time.sleep(2)
         data_final_emissao.clear()
-        data_final_emissao.click()
-        time.sleep(2)
         data_final_emissao.send_keys(data_final_emissao_value)
         data_final_emissao.send_keys(Keys.ENTER)
 
-
-        
-
         time.sleep(2)
-        wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "btn-icon-search")))
         filtrar = driver.find_element(By.CLASS_NAME, "btn-icon-search")
         filtrar.click()
         time.sleep(2)
@@ -108,13 +97,12 @@ def iniciar_automacao():
         scroll_to_bottom()
 
         def processar_emails():
-            
-
             while True:
                 botoes_email = driver.find_elements(By.CLASS_NAME, "action-icon.icon-envelope.tip.top.action-send-email")
 
                 if not botoes_email:
-                    messagebox.showinfo("Automação", "Todos os e-mails foram enviados.")
+                    status_label.config(text="Todos os e-mails foram enviados!", fg="green")
+                    root.update()
                     break
 
                 for i, botao in enumerate(botoes_email, start=1):
@@ -122,7 +110,8 @@ def iniciar_automacao():
                         driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", botao)
                         time.sleep(1)
 
-                        print(f"Processando e-mail", f"Processando e-mail {i}/{len(botoes_email)}...")
+                        status_label.config(text=f"Enviando e-mail {i}/{len(botoes_email)}...", fg="blue")
+                        root.update()
 
                         botao.click()
                         time.sleep(3)
@@ -134,51 +123,59 @@ def iniciar_automacao():
                             WebDriverWait(driver, 3).until(
                                 EC.presence_of_element_located((By.CLASS_NAME, "notify-message-general-wrapper"))
                             )
-                            print("Erro: o e-mail do usuário não está preenchido corretamente", flush=True)
-                            messagebox.showerror("Erro", "O e-mail do usuário não está preenchido corretamente")
+                            status_label.config(text="Erro: e-mail do cliente incorreto!", fg="red")
+                            root.update()
                             continue
                         except TimeoutException:
                             pass
 
                         time.sleep(5)
-
                         botoes_email = driver.find_elements(By.CLASS_NAME, "action-icon.icon-envelope.tip.top.action-send-email")
                         restante = len(botoes_email)
 
-                        print(f"Restam {restante} e-mails para enviar")
+                        status_label.config(text=f"Restam {restante} e-mails para enviar...", fg="blue")
+                        root.update()
 
                         if not botoes_email:
-                            messagebox.showinfo("Automação", "Todos os e-mails foram enviados com sucesso.")
+                            status_label.config(text="Todos os e-mails foram enviados com sucesso!", fg="green")
+                            root.update()
                             break
 
                     except NoSuchElementException:
-                        messagebox.showerror("Erro", "Não foi possível localizar um elemento na página.")
+                        status_label.config(text="Erro: Elemento não encontrado.", fg="red")
+                        root.update()
                         continue
 
                     except TimeoutException:
-                        messagebox.showerror("Erro", "Tempo de espera excedido. Verifique sua conexão ou a página.")
+                        status_label.config(text="Erro: Tempo de espera excedido.", fg="red")
+                        root.update()
                         continue
 
                     except ElementClickInterceptedException:
-                        messagebox.showerror("Erro", "Não foi possível clicar no botão. Ele pode estar oculto.")
+                        status_label.config(text="Erro: Não foi possível clicar no botão.", fg="red")
+                        root.update()
                         continue
 
                     except Exception as e:
+                        status_label.config(text=f"Erro inesperado: {e}", fg="red")
+                        root.update()
                         continue
 
             driver.quit()
-            messagebox.showinfo("Sucesso", "Automação concluída!")
+            status_label.config(text="Automação concluída!", fg="green")
+            root.update()
 
         processar_emails()
 
     except Exception as e:
-        messagebox.showerror("Erro", f"Erro inesperado: {e}")
+        status_label.config(text=f"Erro inesperado: {e}", fg="red")
+        root.update()
         driver.quit()
 
 
 root = tk.Tk()
 root.title("Automação de E-mails")
-root.geometry("280x280")
+root.geometry("300x350")
 
 tk.Label(root, text="E-mail:").pack(pady=5)
 email_entry = tk.Entry(root, width=30)
@@ -198,5 +195,8 @@ data_final_emissao_entry.pack()
 
 botao_iniciar = tk.Button(root, text="Iniciar Automação", command=iniciar_automacao)
 botao_iniciar.pack(pady=20)
+
+status_label = tk.Label(root, text="Aguardando início...", fg="gray")
+status_label.pack(pady=10)
 
 root.mainloop()
