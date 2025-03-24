@@ -2,7 +2,9 @@
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/S41T4M4/automacao_vhsys_email)  
 ![GitHub last commit](https://img.shields.io/github/last-commit/S41T4M4/automacao_vhsys_email)  
-![GitHub license](https://img.shields.io/github/license/S41T4M4/automacao_vhsys_email)  
+
+
+
 
 Automação desenvolvida para facilitar o **envio de e-mails na tela "Contas a Receber"** do VHSYS.  
 A ferramenta **filtra boletos não enviados e dispara os e-mails automaticamente** usando **Python + Selenium**.  
@@ -72,21 +74,6 @@ pyinstaller --onefile --windowed automacao_email.py
 
 ---
 
-## 📂 Estrutura do Projeto  
-
-```plaintext
-automacao_vhsys_email/
-│── build/               # Arquivos temporários gerados pelo PyInstaller
-│── dist/                # Arquivos compilados (.exe)
-│── automacao_email.py   # Código principal
-│── chromedriver.exe     # WebDriver para automação
-│── automacao_email.spec # Configuração do PyInstaller
-│── README.md            # Documentação do projeto
-│── .gitignore           # Arquivos ignorados pelo Git
-```
-
----
-
 
 ## 🤝 Contribuindo  
 
@@ -111,5 +98,3 @@ Se quiser contribuir para melhorias no projeto:
 
 
 💡 **Criado por:** [Vitor Ibraim](https://github.com/S41T4M4)  
-
-Se essa automação foi útil para você, ⭐ deixe um **star** no repositório! 🚀
